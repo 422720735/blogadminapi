@@ -16,3 +16,12 @@ func GetSystemOrg(c *gin.Context) {
 	}
 	common.Echo(c, 200, res)
 }
+
+func SetSystemOrg(c *gin.Context) {
+	msg, err := common.Unmarshal(c)
+	if err != nil {
+		common.Echo(c, common.G_ParamErr, "参数不合法")
+		return
+	}
+	// 获取post body参数
+}

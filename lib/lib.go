@@ -33,16 +33,12 @@ func init() {
 func (conf *Configs) LoadConfig(path string) {
 	conf.config = make(map[string]string)
 	file, err := os.Open(path)
-	// fmt.Print(file, err)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	defer file.Close()
-
 	buf := bufio.NewReader(file)
-
-	// fmt.Println(string(lines))
 	for {
 		lines, _, err := buf.ReadLine()
 		line := strings.TrimSpace(string(lines))
@@ -74,8 +70,6 @@ func (conf *Configs) LoadConfig(path string) {
 		newKey := conf.node + MidStr + key
 		conf.config[newKey] = value
 	}
-
-	// fmt.Println(conf.config)
 }
 
 func (conf *Configs) Read(node, key string) string {

@@ -1,32 +1,26 @@
 package servers
 
 import (
+	"blogadminapi/dbops"
 	"blogadminapi/model"
-	"fmt"
 )
 
-func GetSystem() (*model.SystemConfig, error) {
-
-	var res *model.SystemConfig
+func GetSystem() ([]*model.SystemConfig, error) {
+	rows, err := dbops.DbConn.Query("SELECT id, `name`, `value` FROM tb_config")
 	if err != nil {
-		fmt.Println(err)
-		return res, err
+		return nil, err
 	}
-
-	for stmtOut.Next() {
-		var id int
+	var res []*model.SystemConfig
+	for rows.Next() {
 		var name, value string
-		if err := stmtOut.Scan(&id, &name, &value); err != nil {
+		var id int
+		if err := rows.Scan(&id, &name, &value); err != nil {
 			return res, err
 		}
-
 		c := &model.SystemConfig{Id: id, Name: name, Value: value}
 		res = append(res, c)
 	}
-
-	fmt.Println(res)
-
-	defer stmtOut.Close()
+	defer rows.Close()
 	return res, nil
 
 }
