@@ -92,26 +92,42 @@ func SetTag(c *gin.Context) {
 		common.Echo(c, common.G_ParamErr, "查詢失敗")
 		return
 	}
-	id, err := transform.InterToInt(msg["id"])
-	if err != nil {
-		common.Echo(c, common.G_ParamErr, "参数不合法")
-		return
-	}
+
 	name, err := transform.InterToString(msg["name"])
 	if err != nil {
 		common.Echo(c, common.G_ParamErr, "标题不合法")
 		return
 	}
-
-	status, err := servers.SetCategory(id, name)
+	count, err := servers.GetCountTag(name)
 	if err != nil {
-		common.Echo(c, common.G_ParamErr, "修改失败，请输入合法的参数")
+		common.Echo(c, common.G_ParamErr, "参数不正确")
 		return
 	}
-
-	if status {
-		common.Echo(c, common.G_Success, "新增成功~！")
+	if count > 0 {
+		common.Echo(c, common.G_ParamErr, "该名称的数据已存在，不能重复添加！~")
 		return
 	}
-	common.Echo(c, common.G_Success, "编辑成功~！")
+	id, err := transform.InterToInt(msg["id"])
+	/**
+	* 传递了id就是修改没有传递就是新增
+	 */
+	if id == -1 {
+		result, err := servers.Inset(name)
+		if result && err == nil {
+			common.Echo(c, common.G_Success, "新增成功")
+			return
+		} else {
+			common.Echo(c, common.G_ParamErr, "参数不合法")
+			return
+		}
+	} else {
+		result, err := servers.Update(name, id)
+		if result && err == nil {
+			common.Echo(c, common.G_Success, "编辑成功")
+			return
+		} else {
+			common.Echo(c, common.G_ParamErr, "参数不合法")
+			return
+		}
+	}
 }

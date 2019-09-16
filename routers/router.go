@@ -2,8 +2,9 @@ package routers
 
 import (
 	cv1 "blogadminapi/controllers/v2"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func InitRouter() *gin.Engine {
@@ -11,10 +12,10 @@ func InitRouter() *gin.Engine {
 	r.Use(Cors())
 	v1 := r.Group("/api/admin/v2")
 	{
-		v1.GET("/system", cv1.GetSystemOrg)
-		v1.POST("/system", cv1.SetSystemOrg)
-		v1.GET("/tag", cv1.GetTag)
-		v1.POST("/tag", cv1.SetTag)
+		v1.GET("/system/get", cv1.GetSystemOrg)
+		v1.POST("/system/post", cv1.SetSystemOrg)
+		v1.GET("/tag/get", cv1.GetTag)
+		v1.POST("/tag/post", cv1.SetTag)
 	}
 	return r
 }
