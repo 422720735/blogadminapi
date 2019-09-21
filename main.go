@@ -7,7 +7,6 @@ import (
 
 func init()  {
 	gin.SetMode(gin.DebugMode)
-
 }
 func main() {
 	r := routers.InitRouter()
