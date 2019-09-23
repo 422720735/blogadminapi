@@ -41,9 +41,9 @@ func GetArticleLimitList(id, pageSize, current int) (int, int, []*model.PostList
 	// stmtLimt, err := dbops.DbConn.Query("select id, title, tags, is_top, created, updated from tb_post order by id desc limit ?, ?", (current-1)*pageSize, pageSize)
 
 	if id > 0 {
-		sq = "select id, title, tags, is_top, created, updated from tb_post where category_id = ? order by id desc limit ?, ?"
+		sq = "select id, title, tags, is_top, created, updated, category_id from tb_post where category_id = ? order by id desc limit ?, ?"
 	} else {
-		sq = "select id, title, tags, is_top, created, updated from tb_post order by id desc limit ?, ?"
+		sq = "select id, title, tags, is_top, created, updated, category_id from tb_post order by id desc limit ?, ?"
 	}
 
 	stmtLimt, err := dbops.DbConn.Prepare(sq)
@@ -76,16 +76,18 @@ func GetArticleLimitList(id, pageSize, current int) (int, int, []*model.PostList
 			&ar.IsTop,
 			&ar.Created,
 			&ar.Updated,
+			&ar.CategoryId,
 		); err != nil {
 			return 0, 0, res, err
 		}
 		cat := &model.PostListRes{
-			Id:      ar.Id,
-			Title:   ar.Title,
-			Tags:    ar.Tags,
-			IsTop:   ar.IsTop,
-			Created: ar.Created.Unix(),
-			Updated: ar.Updated.Unix(),
+			Id:         ar.Id,
+			Title:      ar.Title,
+			Tags:       ar.Tags,
+			IsTop:      ar.IsTop,
+			Created:    ar.Created.Unix(),
+			Updated:    ar.Updated.Unix(),
+			CategoryId: ar.CategoryId,
 		}
 		res = append(res, cat)
 	}
