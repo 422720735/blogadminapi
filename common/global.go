@@ -1,7 +1,13 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-09-12 16:11:11
+ * @LastEditTime: 2019-09-23 17:06:15
+ * @LastEditors: Please set LastEditors
+ */
 package common
 
 import (
-	"blogadminapi/json"
 	"net/http"
 	"time"
 
@@ -20,16 +26,18 @@ func Echo(c *gin.Context, code int, body interface{}) {
 /*
 * 分页返回的数据
 @params: allCount   总数量
-@params: num        返回的数量
+@params: count   	总页数
 @params: pageSize   请求每页显示的数量
+
 @params: current    当前页
- */
-func Page(allCount, num, pageSize, current int, inter interface{})([]byte, error) {
-	data:=make(map[string]interface{})
+*/
+func Page(allCount, count, pageSize, current int, inter interface{}) map[string]interface{} {
+	data := make(map[string]interface{})
 	data["total"] = allCount
-	data["num"] = num
 	data["pageSize"] = pageSize
+	data["count"] = count
 	data["current"] = current
 	data["data"] = inter
-	return json.Marshal(data)
+
+	return data
 }

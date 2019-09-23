@@ -1,10 +1,18 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-09-23 09:31:19
+ * @LastEditTime: 2019-09-23 17:09:30
+ * @LastEditors: Please set LastEditors
+ */
 package v2
 
 import (
 	"blogadminapi/common"
 	"blogadminapi/servers"
-	"github.com/gin-gonic/gin"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 /**
@@ -23,11 +31,12 @@ func GetArticleList(c *gin.Context) {
 	id, _ := strconv.Atoi(idStr)
 	pageSize, _ := strconv.Atoi(pageSizeStr)
 	current, _ := strconv.Atoi(currentStr)
-	servers.GetArticleLimitList(id, pageSize, current)
-	common.Echo(c, common.G_Success, gin.H{
-		"id": id,
-		"current": current,
-		"pageSize": pageSize,
-	})
-
+	total, count, res, err := servers.GetArticleLimitList(id, pageSize, current)
+	if err != nil {
+		common.Echo(c, common.G_ParamErr, "查询数据失败")
+		return
+	}
+	// 组装分页数据
+	data := common.Page(total, count, pageSize, current, res)
+	common.Echo(c, common.G_Success, data)
 }

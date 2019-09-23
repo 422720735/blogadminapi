@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-09-12 16:35:32
+ * @LastEditTime: 2019-09-23 11:13:31
+ * @LastEditors: Please set LastEditors
+ */
 package model
 
 type SystemConfig struct {
