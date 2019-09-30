@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-23 09:31:19
- * @LastEditTime: 2019-09-24 15:49:23
+ * @LastEditTime: 2019-09-24 16:44:10
  * @LastEditors: Please set LastEditors
  */
 package servers
@@ -43,11 +43,12 @@ func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, [
 		// 去除收尾空格
 		sq = strings.TrimSpace(sq)
 	}
+	beego.Info("======", sq)
 	stmtOutCount, err := dbops.DbConn.Prepare(sq)
 	var res []*model.PostListRes
 	var total int
 	if err != nil {
-		beego.Info("======", sq)
+
 		return 0, 0, nil, err
 	}
 
@@ -72,7 +73,7 @@ func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, [
 
 	var baseSql, limitSql, idSql, likeSql string
 	baseSql = "select id, title, tags, is_top, created, updated, views, category_id from tb_post where"
-	limitSql = " order by id desc limit ?, ?"
+	limitSql = " and order by id desc limit ?, ?"
 	idSql = ""
 	likeSql = ""
 	if id > 0 {
@@ -83,7 +84,7 @@ func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, [
 	}
 	sq = baseSql + idSql + likeSql + limitSql
 	beego.Info(sq, "sq")
-	if id <= 0 || keyword == "" {
+	if id <= 0 && keyword == "" {
 		sq = strings.Replace(sq, "where", "", -1)
 		sq = strings.TrimSpace(sq)
 	}
