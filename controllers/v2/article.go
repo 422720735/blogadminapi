@@ -12,6 +12,8 @@ import (
 	"blogadminapi/servers"
 	"strconv"
 
+	"github.com/astaxie/beego/logs"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,6 +28,7 @@ func GetArticleList(c *gin.Context) {
 	currentStr := c.Query("current")
 	keyword := c.Query("keyword")
 	if idStr == "" || pageSizeStr == "" || currentStr == "" {
+		logs.Warning("分页参数不合法")
 		common.Echo(c, common.G_ParamErr, "参数不合法")
 		return
 	}
@@ -34,6 +37,7 @@ func GetArticleList(c *gin.Context) {
 	current, _ := strconv.Atoi(currentStr)
 	total, count, res, err := servers.GetArticleLimitList(id, pageSize, current, keyword)
 	if err != nil {
+		logs.Error(err.Error())
 		common.Echo(c, common.G_ParamErr, "查询数据失败")
 		return
 	}

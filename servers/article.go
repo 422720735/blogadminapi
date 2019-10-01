@@ -6,6 +6,8 @@ import (
 	"database/sql"
 	"math"
 	"strings"
+
+	"github.com/astaxie/beego/logs"
 )
 
 // import "blogadminapi/dbops"
@@ -33,9 +35,9 @@ func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, [
 	var res []*model.PostListRes
 	var total int
 	if err != nil {
+		logs.Error("article count", err.Error())
 		return 0, 0, nil, err
 	}
-
 	if id > 0 && keyword != "" {
 		stmtOutCount.QueryRow(id, "%"+keyword+"%").Scan(&total)
 	} else if id > 0 && keyword == "" {
@@ -75,7 +77,6 @@ func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, [
 		sq = strings.Replace(sq, "where", "", -1)
 		sq = strings.TrimSpace(sq)
 	}
-
 	stmtLimt, err := dbops.DbConn.Prepare(sq)
 	var row *sql.Rows
 	var e error
@@ -89,6 +90,7 @@ func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, [
 		row, e = stmtLimt.Query((current-1)*pageSize, pageSize)
 	}
 	if e != nil {
+		logs.Error("article limit sq error", err.Error())
 		return 0, 0, res, err
 	}
 
@@ -104,6 +106,7 @@ func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, [
 			&ar.Views,
 			&ar.CategoryId,
 		); err != nil {
+			logs.Error("装填数据居然失败")
 			return 0, 0, res, err
 		}
 
@@ -121,6 +124,5 @@ func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, [
 	}
 	stmtLimt.Close()
 	count := int(math.Ceil(float64(total) / float64(pageSize)))
-
 	return total, count, res, err
 }
