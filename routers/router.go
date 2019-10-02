@@ -10,14 +10,16 @@ import (
 func InitRouter() *gin.Engine {
 	r := gin.Default()
 	r.Use(Cors())
-	v1 := r.Group("/api/admin/v2")
+	// 登陆
+	r.POST("/api/admin/login", cv1.Login)
+	v2 := r.Group("/api/admin/v2")
 	{
-		v1.GET("/system/get", cv1.GetSystemOrg)
-		v1.POST("/system/post", cv1.SetSystemOrg)
-		v1.GET("/tag/get", cv1.GetTag)
-		v1.GET("/tag/del", cv1.DelTag)
-		v1.POST("/tag/post", cv1.SetTag)
-		v1.GET("/articleList/get", cv1.GetArticleList)
+		v2.GET("/system/get", cv1.GetSystemOrg)
+		v2.POST("/system/post", cv1.SetSystemOrg)
+		v2.GET("/tag/get", cv1.GetTag)
+		v2.GET("/tag/del", cv1.DelTag)
+		v2.POST("/tag/post", cv1.SetTag)
+		v2.GET("/articleList/get", cv1.GetArticleList)
 	}
 	return r
 }
