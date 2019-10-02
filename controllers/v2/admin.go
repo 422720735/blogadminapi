@@ -13,6 +13,9 @@ import (
 	"blogadminapi/servers"
 	"blogadminapi/transform"
 	"log"
+	"strconv"
+
+	"github.com/astaxie/beego/logs"
 
 	"github.com/gin-gonic/gin"
 )
@@ -89,6 +92,22 @@ func GetTag(c *gin.Context) {
 		return
 	}
 	common.Echo(c, common.G_Success, res)
+}
+
+func DelTag(c *gin.Context) {
+	idStr := c.Query("id")
+	if idStr == "" {
+		logs.Warning("id is undefined")
+		common.Echo(c, common.G_ParamErr, "参数不合法")
+		return
+	}
+	id, _ := strconv.Atoi(idStr)
+	err := servers.DelteleTag(id)
+	if err != nil {
+		common.Echo(c, common.G_ParamErr, "删除失败")
+		return
+	}
+	common.Echo(c, common.G_Success, "删除成功")
 }
 
 func SetTag(c *gin.Context) {

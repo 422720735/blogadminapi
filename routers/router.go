@@ -15,6 +15,7 @@ func InitRouter() *gin.Engine {
 		v1.GET("/system/get", cv1.GetSystemOrg)
 		v1.POST("/system/post", cv1.SetSystemOrg)
 		v1.GET("/tag/get", cv1.GetTag)
+		v1.GET("/tag/del", cv1.DelTag)
 		v1.POST("/tag/post", cv1.SetTag)
 		v1.GET("/articleList/get", cv1.GetArticleList)
 	}

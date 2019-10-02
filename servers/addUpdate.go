@@ -9,6 +9,8 @@ package servers
 
 import (
 	"blogadminapi/dbops"
+
+	"github.com/astaxie/beego/logs"
 )
 
 func GetCountTag(name string) (int, error) {
@@ -45,12 +47,30 @@ func Update(n string, id int) (bool, error) {
 	// UPDATE tb_category SET `name`  = 'aes', updated WHERE id = 4;
 	stmtUpdate, err := dbops.DbConn.Prepare("UPDATE tb_category SET `name` = ?, updated = now() WHERE `id` = ?")
 	if err != nil {
+		logs.Warning("update tag not sql err", err.Error())
 		return false, err
 	}
 	_, err = stmtUpdate.Exec(n, id)
 	if err != nil {
+		logs.Warning("update tag not exec err", err.Error())
 		return false, err
 	}
 	defer stmtUpdate.Close()
 	return true, nil
+}
+
+func DelteleTag(id int) error {
+	stmtUpdate, err := dbops.DbConn.Prepare("update tb_category set status = ? where id = ?")
+	if err != nil {
+		logs.Warning("delete tag not sql err", err.Error())
+		return err
+	}
+	_, err = stmtUpdate.Exec(1, id)
+	if err != nil {
+		logs.Alert("soft delete tag not err", err.Error())
+		return err
+	}
+	defer stmtUpdate.Close()
+	return nil
+
 }
