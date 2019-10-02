@@ -29,11 +29,11 @@ func GetCountTag(name string) (int, error) {
 
 // 新增方法
 func Inset(n string) (bool, error) {
-	stmtIns, err := dbops.DbConn.Prepare("INSERT INTO tb_category(`name`, created, updated) value (?, NOW(), NOW())")
+	stmtIns, err := dbops.DbConn.Prepare("INSERT INTO tb_category(`name`, created, updated, status) value (?, NOW(), NOW(), ?)")
 	if err != err {
 		return false, err
 	}
-	_, err = stmtIns.Exec(n)
+	_, err = stmtIns.Exec(n, 0)
 
 	if err != nil {
 		return false, err
