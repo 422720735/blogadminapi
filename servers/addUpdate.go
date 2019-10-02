@@ -60,7 +60,7 @@ func Update(n string, id int) (bool, error) {
 }
 
 func DelteleTag(id int) error {
-	stmtUpdate, err := dbops.DbConn.Prepare("update tb_category set status = ? where id = ?")
+	stmtUpdate, err := dbops.DbConn.Prepare("update tb_category set status = ?, updated = now() where id = ?")
 	if err != nil {
 		logs.Warning("delete tag not sql err", err.Error())
 		return err

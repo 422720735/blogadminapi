@@ -121,7 +121,7 @@ func SetSystemConfig(title, url, keywords, description, email, qq, start string)
 }
 
 func GetCategory() ([]*model.Category, error) {
-	rows, err := dbops.DbConn.Query("SELECT id, `name`, created, updated FROM tb_category")
+	rows, err := dbops.DbConn.Query("SELECT id, `name`, created, updated FROM tb_category where status = ?", 0)
 	if err != nil {
 		return nil, err
 	}

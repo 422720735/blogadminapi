@@ -86,7 +86,7 @@ func SetSystemOrg(c *gin.Context) {
 func GetTag(c *gin.Context) {
 	res, err := servers.GetCategory()
 	if err != nil {
-		log.Printf("Error in AddNewVideo: %s", err)
+		logs.Error("Error in AddNewVideo: %s", err.Error())
 		// 打印日志
 		common.Echo(c, common.G_ParamErr, "查詢失敗")
 		return
