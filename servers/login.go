@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-08 16:45:55
- * @LastEditTime: 2019-10-08 17:36:13
+ * @LastEditTime: 2019-10-08 18:00:52
  * @LastEditors: Please set LastEditors
  */
 package servers
@@ -23,7 +23,7 @@ func SeleltUsers(user, pwd string) (*model.User, error) {
 		logs.Error("login is user err", err.Error())
 		return res, err
 	}
-	err = stmtOut.QueryRow("admin").Scan(&res.Username, &res.Password)
+	err = stmtOut.QueryRow(user).Scan(&res.Username, &res.Password)
 	if err != nil {
 		logs.Error("select user err", err.Error())
 		return res, err
