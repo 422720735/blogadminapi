@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-08 16:07:12
- * @LastEditTime: 2019-10-09 17:29:55
+ * @LastEditTime: 2019-10-09 18:12:29
  * @LastEditors: Please set LastEditors
  */
 package v2
@@ -55,4 +55,14 @@ func Login(c *gin.Context) {
 		return
 	}
 	common.Echo(c, common.G_ParamErr, "登录失败")
+}
+
+func Verify(c *gin.Context) {
+	strToken := c.Request.Header.Get("token")
+	claim, err := jkt.VerifyAction(strToken)
+	if err != nil {
+		common.Echo(c, common.G_ParamErr, err.Error())
+		return
+	}
+	common.Echo(c, common.G_Success, claim)
 }

@@ -2,7 +2,7 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-09 15:24:41
- * @LastEditTime: 2019-10-09 17:29:37
+ * @LastEditTime: 2019-10-09 18:11:24
  * @LastEditors: Please set LastEditors
  */
 package jkt
@@ -54,8 +54,24 @@ func getToken(claims *JWTClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString([]byte(Secret))
 	if err != nil {
-		logs.Error("token生成失败，", err.Error())
 		return "", errors.New(ErrorReason_ServerBusy)
 	}
 	return signedToken, nil
+}
+
+func VerifyAction(strToken string) (*JWTClaims, error) {
+	token, err := jwt.ParseWithClaims(strToken, &JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(Secret), nil
+	})
+	if err != nil {
+		return nil, errors.New(ErrorReason_ServerBusy)
+	}
+	claims, ok := token.Claims.(*JWTClaims)
+	if !ok {
+		return nil, errors.New(ErrorReason_ReLogin)
+	}
+	if err := token.Claims.Valid(); err != nil {
+		return nil, errors.New(ErrorReason_ReLogin)
+	}
+	return claims, nil
 }

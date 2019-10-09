@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-09-12 15:20:07
+ * @LastEditTime: 2019-09-12 15:20:07
+ * @LastEditors: your name
+ */
 package routers
 
 import (
@@ -20,6 +27,7 @@ func InitRouter() *gin.Engine {
 		v2.GET("/tag/del", cv1.DelTag)
 		v2.POST("/tag/post", cv1.SetTag)
 		v2.GET("/articleList/get", cv1.GetArticleList)
+		v2.GET("/auth/verify", cv1.Verify)
 	}
 	return r
 }
