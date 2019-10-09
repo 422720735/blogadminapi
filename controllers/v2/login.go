@@ -2,13 +2,14 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-08 16:07:12
- * @LastEditTime: 2019-10-08 18:00:17
+ * @LastEditTime: 2019-10-09 17:29:55
  * @LastEditors: Please set LastEditors
  */
 package v2
 
 import (
 	"blogadminapi/common"
+	"blogadminapi/middleware/jkt"
 	"blogadminapi/servers"
 	"blogadminapi/transform"
 
@@ -49,7 +50,8 @@ func Login(c *gin.Context) {
 	}
 	if user.Password == " e10adc3949ba59abbe56e057f20f883e" && user.Username == username {
 		// 保存到sessign token
-		common.Echo(c, common.G_Success, "登录成功")
+		token := jkt.NewToken(user.Username, user.Password)
+		common.Echo(c, common.G_Success, token)
 		return
 	}
 	common.Echo(c, common.G_ParamErr, "登录失败")
