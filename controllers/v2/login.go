@@ -1,11 +1,4 @@
 /*
- * @Description: In User Settings Edit
- * @Author: your name
- * @Date: 2019-10-08 16:07:12
- * @LastEditTime: 2019-10-10 17:57:58
- * @LastEditors: Please set LastEditors
-
-gin 基于JWT实现token令牌功能
  https://www.jianshu.com/p/1f9915818992
 */
 package v2

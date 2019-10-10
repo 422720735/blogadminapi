@@ -9,6 +9,7 @@ package routers
 
 import (
 	cv1 "blogadminapi/controllers/v2"
+	"blogadminapi/middleware/jkt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,6 +21,7 @@ func InitRouter() *gin.Engine {
 	// 登陆
 	r.POST("/api/admin/login", cv1.Login)
 	v2 := r.Group("/api/admin/v2")
+	v2.Use(jkt.JWTAuth())
 	{
 		v2.GET("/system/get", cv1.GetSystemOrg)
 		v2.POST("/system/post", cv1.SetSystemOrg)
@@ -27,7 +29,6 @@ func InitRouter() *gin.Engine {
 		v2.GET("/tag/del", cv1.DelTag)
 		v2.POST("/tag/post", cv1.SetTag)
 		v2.GET("/articleList/get", cv1.GetArticleList)
-		v2.GET("/auth/verify", cv1.Verify)
 	}
 	return r
 }

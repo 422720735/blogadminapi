@@ -1,16 +1,9 @@
-/*
- * @Description: In User Settings Edit
- * @Author: your name
- * @Date: 2019-10-10 16:53:52
- * @LastEditTime: 2019-10-10 18:18:19
- * @LastEditors: Please set LastEditors
- */
 package jkt
 
 import (
+	"blogadminapi/common"
 	"errors"
 	"log"
-	"net/http"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -22,10 +15,7 @@ func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.Request.Header.Get("token")
 		if token == "" {
-			c.JSON(http.StatusOK, gin.H{
-				"status": -1,
-				"msg":    "请求未携带token，无权限访问",
-			})
+			common.Echo(c, common.G_ParamErr, "你无权限访问")
 			c.Abort()
 			return
 		}
@@ -37,17 +27,11 @@ func JWTAuth() gin.HandlerFunc {
 		claims, err := j.ParseToken(token)
 		if err != nil {
 			if err == TokenExpired {
-				c.JSON(http.StatusOK, gin.H{
-					"status": -1,
-					"msg":    "授权已过期",
-				})
+				common.Echo(c, common.G_ParamErr, "授权已过期")
 				c.Abort()
 				return
 			}
-			c.JSON(http.StatusOK, gin.H{
-				"status": -1,
-				"msg":    err.Error(),
-			})
+			common.Echo(c, common.G_ParamErr, err.Error())
 			c.Abort()
 			return
 		}
