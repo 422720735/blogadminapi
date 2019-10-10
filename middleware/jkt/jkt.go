@@ -15,7 +15,7 @@ func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.Request.Header.Get("token")
 		if token == "" {
-			common.Echo(c, common.G_ParamErr, "你无权限访问")
+			common.Echo(c, common.G_Restrict, "你无权限访问")
 			c.Abort()
 			return
 		}
@@ -27,11 +27,11 @@ func JWTAuth() gin.HandlerFunc {
 		claims, err := j.ParseToken(token)
 		if err != nil {
 			if err == TokenExpired {
-				common.Echo(c, common.G_ParamErr, "授权已过期")
+				common.Echo(c, common.G_Restrict, "授权已过期")
 				c.Abort()
 				return
 			}
-			common.Echo(c, common.G_ParamErr, err.Error())
+			common.Echo(c, common.G_Restrict, err.Error())
 			c.Abort()
 			return
 		}
