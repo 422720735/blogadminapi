@@ -2,27 +2,20 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-10-08 16:07:12
- * @LastEditTime: 2019-10-10 17:57:58
+ * @LastEditTime: 2019-10-10 17:13:59
  * @LastEditors: Please set LastEditors
-
-gin 基于JWT实现token令牌功能
- https://www.jianshu.com/p/1f9915818992
-*/
+ */
 package v2
 
 import (
 	"blogadminapi/common"
-	myjwt "blogadminapi/middleware/jkt"
+	"blogadminapi/middleware/jkt"
 	"blogadminapi/servers"
 	"blogadminapi/transform"
-	"time"
 
 	"github.com/astaxie/beego/logs"
-	"github.com/gin-gonic/gin"
-)
 
-const (
-	ExpireTime = 3600
+	"github.com/gin-gonic/gin"
 )
 
 func Login(c *gin.Context) {
@@ -56,36 +49,20 @@ func Login(c *gin.Context) {
 		return
 	}
 	if user.Password == " e10adc3949ba59abbe56e057f20f883e" && user.Username == username {
-		// 生产token
-		token := newToken(c, user.Username, user.Password)
-		if token == "" {
-			common.Echo(c, common.G_ParamErr, "登录失败")
-			return
-		}
+		// 保存到sessign token
+		token := jkt.NewToken(user.Username, user.Password)
 		common.Echo(c, common.G_Success, token)
 		return
 	}
 	common.Echo(c, common.G_ParamErr, "登录失败")
 }
 
-// 生成令牌
-func newToken(c *gin.Context, user, pwd string) string {
-	//CreateToken
-	j := &myjwt.JWT{
-		[]byte("newtrekWang"),
-	}
-	claims := myjwt.CustomClaims{
-		ID:       1,
-		Username: user,
-		Password: pwd,
-	}
-	claims.IssuedAt = time.Now().Unix()
-	claims.ExpiresAt = time.Now().Add(time.Second * time.Duration(ExpireTime)).Unix()
-	token, err := j.CreateToken(claims)
-
+func Verify(c *gin.Context) {
+	strToken := c.Request.Header.Get("token")
+	claim, err := jkt.VerifyAction(strToken)
 	if err != nil {
-		return ""
+		common.Echo(c, common.G_ParamErr, err.Error())
+		return
 	}
-
-	return token
+	common.Echo(c, common.G_Success, claim)
 }
