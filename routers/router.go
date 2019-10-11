@@ -2,8 +2,8 @@
  * @Description: In User Settings Edit
  * @Author: your name
  * @Date: 2019-09-12 15:20:07
- * @LastEditTime: 2019-09-12 15:20:07
- * @LastEditors: your name
+ * @LastEditTime: 2019-10-11 14:15:20
+ * @LastEditors: Please set LastEditors
  */
 package routers
 
@@ -29,6 +29,7 @@ func InitRouter() *gin.Engine {
 		v2.GET("/tag/del", cv1.DelTag)
 		v2.POST("/tag/post", cv1.SetTag)
 		v2.GET("/articleList/get", cv1.GetArticleList)
+		v2.POST("/article/info", cv1.Upload)
 	}
 	return r
 }
