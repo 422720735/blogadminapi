@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-09-16 10:50:30
+ * @LastEditTime: 2019-10-12 17:58:35
+ * @LastEditors: Please set LastEditors
+ */
 package transform
 
 //所有和转换相关的函数
@@ -168,4 +175,21 @@ func HexToDec(num string) (string, error) {
 
 	}
 	return "", errors.New("input not a number")
+}
+
+func InterToBool(inter interface{}) (bool, error) {
+	if inter == nil {
+		return false, errors.New("参数错误")
+	}
+	switch v := inter.(type) {
+	case bool:
+		return v, nil
+	case string:
+		if v == "false" {
+			return false, nil
+		}
+		return true, nil
+	default:
+		return false, fmt.Errorf("type %T", v)
+	}
 }
