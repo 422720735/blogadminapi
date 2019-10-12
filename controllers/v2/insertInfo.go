@@ -76,9 +76,14 @@ func AddArticleInfo(c *gin.Context) {
 	  置顶为1，否则为0。
 	*/
 	if !isTop {
-		servers.OrdinaryInsertAritcle(title, tags, image, content, categoryId, 0)
+		err := servers.OrdinaryInsertAritcle(title, tags, url, image, content, categoryId, 0)
+		if err != nil {
+			logs.Error("add article err", err.Error())
+			common.Echo(c, common.G_ParamErr, "新增失败")
+			return
+		}
+		common.Echo(c, common.G_Success, "新增数据成功")
 	} else {
 		servers.IsTopInsertAritcle(title, tags, image, content, categoryId, 1)
 	}
-	common.Echo(c, common.G_Success, title)
 }

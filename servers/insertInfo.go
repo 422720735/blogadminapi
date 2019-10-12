@@ -12,13 +12,13 @@ import (
 )
 
 // 普通当前数据不置顶
-func OrdinaryInsertAritcle(title, tag, image, content string, cid, isTop int) {
+func OrdinaryInsertAritcle(title, tag, url, image, content string, cid, isTop int) error {
 	stmtIns, err := dbops.DbConn.Prepare(`
 		INSERT INTO tb_post(
 			user_id, 
-			'title', 
-			'url',
-			'content', 
+			title, 
+			url,
+			content, 
 			tags, 
 			views,
 			status,
@@ -45,10 +45,14 @@ func OrdinaryInsertAritcle(title, tag, image, content string, cid, isTop int) {
 				?)
 	`)
 	if err != nil {
-		return
+		return err
 	}
-	stmtIns.Exec(1, &title, &url, &content, &tag, 0, 0, &isTop, &cid, nil, nil, &image)
+	_, err = stmtIns.Exec(1, &title, &url, &content, &tag, 0, 0, &isTop, &cid, nil, nil, &image)
+	if err != nil {
+		return err
+	}
 	defer stmtIns.Close()
+	return nil
 }
 
 // 当前数据置顶的
