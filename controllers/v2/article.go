@@ -10,6 +10,7 @@ package v2
 import (
 	"blogadminapi/common"
 	"blogadminapi/servers"
+	"blogadminapi/transform"
 	"strconv"
 
 	"github.com/astaxie/beego/logs"
@@ -49,4 +50,30 @@ func GetArticleList(c *gin.Context) {
 	// 组装分页数据
 	data := common.Page(total, count, pageSize, current, res)
 	common.Echo(c, common.G_Success, data)
+}
+
+// 修改文章置顶
+func UpdateArticleIstop(c *gin.Context) {
+	msg, err := common.Unmarshal(c)
+	if err != nil {
+		common.Echo(c, common.G_ParamErr, "参数不正确")
+		return
+	}
+	id, err := transform.InterToInt(msg["id"])
+	if err != nil || id == -1 {
+		common.Echo(c, common.G_ParamErr, "")
+		return
+	}
+	isTop, err := transform.InterToBool(msg["isTop"])
+	if err != nil {
+		common.Echo(c, common.G_ParamErr, "参数不正确")
+		return
+	}
+	err = servers.UpdateArticleIstop(id, isTop)
+	if err != nil {
+		logs.Warning("is_top fail to modify", err.Error())
+		common.Echo(c, common.G_ParamErr, "修改置顶状态失败")
+		return
+	}
+	common.Echo(c, common.G_Success, "修改置顶状态成功")
 }

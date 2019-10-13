@@ -118,10 +118,11 @@ func OldGetArticleLimitList(id, pageSize, current int, keyword string) (int, int
 		}
 
 		cat := &model.PostListRes{
-			Id:         ar.Id,
-			Title:      ar.Title,
-			Tags:       ar.Tags,
-			IsTop:      ar.IsTop,
+			Id:    ar.Id,
+			Title: ar.Title,
+			Tags:  ar.Tags,
+			// IsTop:      ar.IsTop,
+			IsTop:      false,
 			Created:    ar.Created.Unix(),
 			Updated:    ar.Updated.Unix(),
 			Views:      ar.Views,

@@ -61,8 +61,6 @@ func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, [
 	// stmtLimt, err := dbops.DbConn.Query("select id, title, tags, is_top, created, updated from tb_post order by id desc limit ?, ?", (current-1)*pageSize, pageSize)
 
 	var baseSql, limitSql, idSql, likeSql string
-	// SELECT id, title, tags, is_top, created, updated, views, category_id from tb_post where is_top = 1 UNION all SELECT id, title, tags, is_top, created, updated, views, category_id from tb_post where is_top = 0 ORDER BY id desc LIMIT 1, 12;
-
 	baseSql = "SELECT id, title, tags, is_top, created, updated, views, category_id from tb_post where is_top = 1 UNION all SELECT id, title, tags, is_top, created, updated, views, category_id from tb_post where is_top = 0"
 	limitSql = " order by id desc limit ?, ?"
 	if id > 0 {
@@ -113,12 +111,17 @@ func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, [
 			logs.Error("装填数据居然失败")
 			return 0, 0, res, err
 		}
-
+		var top bool
+		if ar.IsTop == 1 {
+			top = true
+		} else {
+			top = false
+		}
 		cat := &model.PostListRes{
 			Id:         ar.Id,
 			Title:      ar.Title,
 			Tags:       ar.Tags,
-			IsTop:      ar.IsTop,
+			IsTop:      top,
 			Created:    ar.Created.Unix(),
 			Updated:    ar.Updated.Unix(),
 			Views:      ar.Views,
@@ -129,4 +132,23 @@ func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, [
 	stmtLimt.Close()
 	count := int(math.Ceil(float64(total) / float64(pageSize)))
 	return total, count, res, err
+}
+
+func UpdateArticleIstop(id int, isTop bool) error {
+	stmtUpdate, err := dbops.DbConn.Prepare("UPDATE tb_post SET `is_top` = ? WHERE id = ?")
+	if err != nil {
+		return err
+	}
+	var top int
+	if isTop {
+		top = 1
+	} else {
+		top = 0
+	}
+	_, err = stmtUpdate.Exec(&top, &id)
+	if err != nil {
+		return err
+	}
+	defer stmtUpdate.Close()
+	return nil
 }

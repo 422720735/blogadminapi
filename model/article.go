@@ -24,7 +24,7 @@ type PostListRes struct {
 	Id         int    `json:"id"`
 	Title      string `json:"title"`
 	Tags       string `json:"tags"`
-	IsTop      int8   `json:"isTop"`
+	IsTop      bool   `json:"isTop"`
 	Created    int64  `json:"created"`
 	Updated    int64  `json:"updated"`
 	Views      int    `json:"views"`
