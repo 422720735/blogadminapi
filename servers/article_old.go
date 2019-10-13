@@ -11,7 +11,6 @@ import (
 	"blogadminapi/dbops"
 	"blogadminapi/model"
 	"database/sql"
-	"fmt"
 	"math"
 	"strings"
 
@@ -21,7 +20,7 @@ import (
 // import "blogadminapi/dbops"
 
 /** 查询分页数据*/
-func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, []*model.PostListRes, error) {
+func OldGetArticleLimitList(id, pageSize, current int, keyword string) (int, int, []*model.PostListRes, error) {
 	var sq, idSql1, keySql string
 	sq = "select count(`id`) from tb_post where"
 	if id > 0 {
@@ -60,13 +59,19 @@ func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, [
 	// 查询分页数据
 	// stmtLimt, err := dbops.DbConn.Query("select id, title, tags, is_top, created, updated from tb_post order by id desc limit ?, ?", (current-1)*pageSize, pageSize)
 
-	var baseSql, limitSql, idSql, likeSql string
-	// SELECT id, title, tags, is_top, created, updated, views, category_id from tb_post where is_top = 1 UNION all SELECT id, title, tags, is_top, created, updated, views, category_id from tb_post where is_top = 0 ORDER BY id desc LIMIT 1, 12;
-
-	baseSql = "SELECT id, title, tags, is_top, created, updated, views, category_id from tb_post where is_top = 1 UNION all SELECT id, title, tags, is_top, created, updated, views, category_id from tb_post where is_top = 0"
-	limitSql = " order by id desc limit ?, ?"
 	if id > 0 {
-		idSql = " and category_id = ?"
+		sq = "select id, title, tags, is_top, created, updated, views, category_id from tb_post where category_id = ? order by id desc limit ?, ?"
+	} else {
+		sq = "select id, title, tags, is_top, created, updated, views, category_id from tb_post order by id desc limit ?, ?"
+	}
+
+	var baseSql, limitSql, idSql, likeSql string
+	baseSql = "select id, title, tags, is_top, created, updated, views, category_id from tb_post where"
+	limitSql = " order by id desc limit ?, ?"
+	idSql = ""
+	likeSql = ""
+	if id > 0 {
+		idSql = " category_id = ?"
 	}
 	if keyword != "" && id > 0 {
 		likeSql = " and title like ?"
@@ -75,12 +80,10 @@ func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, [
 	}
 
 	sq = baseSql + idSql + likeSql + limitSql
-	// if id <= 0 && keyword == "" {
-	// 	sq = strings.Replace(sq, "where", "", -1)
-	// 	sq = strings.TrimSpace(sq)
-	// }
-
-	fmt.Printf(sq)
+	if id <= 0 && keyword == "" {
+		sq = strings.Replace(sq, "where", "", -1)
+		sq = strings.TrimSpace(sq)
+	}
 	stmtLimt, err := dbops.DbConn.Prepare(sq)
 	var row *sql.Rows
 	var e error
