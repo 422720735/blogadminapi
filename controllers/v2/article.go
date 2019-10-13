@@ -28,20 +28,24 @@ func GetArticleList(c *gin.Context) {
 	pageSizeStr := c.Query("pageSize")
 	currentStr := c.Query("current")
 	keyword := c.Query("keyword")
+
 	if idStr == "" || pageSizeStr == "" || currentStr == "" {
 		logs.Warning("分页参数不合法")
 		common.Echo(c, common.G_ParamErr, "参数不合法")
 		return
 	}
+
 	id, _ := strconv.Atoi(idStr)
 	pageSize, _ := strconv.Atoi(pageSizeStr)
 	current, _ := strconv.Atoi(currentStr)
 	total, count, res, err := servers.GetArticleLimitList(id, pageSize, current, keyword)
+
 	if err != nil {
 		logs.Error(err.Error())
 		common.Echo(c, common.G_ParamErr, "查询数据失败")
 		return
 	}
+
 	// 组装分页数据
 	data := common.Page(total, count, pageSize, current, res)
 	common.Echo(c, common.G_Success, data)
