@@ -71,19 +71,12 @@ func AddArticleInfo(c *gin.Context) {
 		return
 	}
 
-	/**
-	* @params isTop true是置顶,根据这个bool进行不同sql操作
-	  置顶为1，否则为0。
-	*/
-	if !isTop {
-		err := servers.OrdinaryInsertAritcle(title, tags, url, image, content, categoryId, 0)
-		if err != nil {
-			logs.Error("add article err", err.Error())
-			common.Echo(c, common.G_ParamErr, "新增失败")
-			return
-		}
-		common.Echo(c, common.G_Success, "新增数据成功")
-	} else {
-		servers.IsTopInsertAritcle(title, tags, image, content, categoryId, 1)
+	err = servers.InsertAritcle(title, tags, url, image, content, categoryId, isTop)
+	if err != nil {
+		logs.Error("add article err", err.Error())
+		common.Echo(c, common.G_ParamErr, "新增数据失败")
+		return
 	}
+	
+	common.Echo(c, common.G_Success, "新增数据成功")
 }

@@ -21,6 +21,7 @@ import (
 分页查询文章
 id传递的是0 或者没有传递 查询全部，分页查询
 返回查询到的总条数
+SELECT * from tb_post where is_top = 1 UNION all SELECT * from tb_post where is_top = 0 ORDER BY id desc LIMIT 1, 8;
 */
 func GetArticleList(c *gin.Context) {
 	idStr := c.Query("id")

@@ -11,8 +11,18 @@ import (
 	"blogadminapi/dbops"
 )
 
+/**
+SELECT * from tb_post where is_top = 1 UNION all SELECT * from tb_post where is_top = 0 ORDER BY id desc LIMIT 1, 8;
+*/
 // 普通当前数据不置顶
-func OrdinaryInsertAritcle(title, tag, url, image, content string, cid, isTop int) error {
+//  置顶为 ture == 1，否则为false == 0。
+func InsertAritcle(title, tag, url, image, content string, cid int, isTop bool) error {
+	var top int
+	if isTop {
+		top = 1
+	} else {
+		top = 0
+	}
 	stmtIns, err := dbops.DbConn.Prepare(`
 		INSERT INTO tb_post(
 			user_id, 
@@ -47,15 +57,10 @@ func OrdinaryInsertAritcle(title, tag, url, image, content string, cid, isTop in
 	if err != nil {
 		return err
 	}
-	_, err = stmtIns.Exec(1, &title, &url, &content, &tag, 0, 0, &isTop, &cid, nil, nil, &image)
+	_, err = stmtIns.Exec(1, &title, &url, &content, &tag, 0, 0, &top, &cid, nil, nil, &image)
 	if err != nil {
 		return err
 	}
 	defer stmtIns.Close()
 	return nil
-}
-
-// 当前数据置顶的
-func IsTopInsertAritcle(title, tag, image, content string, cid, isTop int) {
-
 }
