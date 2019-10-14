@@ -77,3 +77,16 @@ func UpdateArticleIstop(c *gin.Context) {
 	}
 	common.Echo(c, common.G_Success, "修改置顶状态成功")
 }
+
+// 文章详情
+func GetArticleInfo(c *gin.Context) {
+	idStr := c.Query("id")
+	id, err := strconv.Atoi(idStr)
+
+	if idStr == "" || err != nil {
+		common.Echo(c, common.G_ParamErr, "id不正确")
+		return
+	}
+
+	common.Echo(c, common.G_Success, id)
+}
