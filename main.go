@@ -1,6 +1,7 @@
 package main
 
 import (
+	"blogadminapi/lib"
 	"blogadminapi/logger"
 	"blogadminapi/routers"
 
@@ -14,5 +15,6 @@ func init() {
 
 func main() {
 	r := routers.InitRouter()
-	r.Run(":4000")
+	port := lib.Conf.Read("site", "httpport")
+	r.Run(":" + port)
 }
