@@ -87,6 +87,10 @@ func GetArticleInfo(c *gin.Context) {
 		common.Echo(c, common.G_ParamErr, "id不正确")
 		return
 	}
-
-	common.Echo(c, common.G_Success, id)
+	res, err := servers.GetArticleInfo(id)
+	if err != nil {
+		common.Echo(c, common.G_ParamErr, "查询失败")
+		return
+	}
+	common.Echo(c, common.G_Success, res)
 }

@@ -40,6 +40,7 @@ func Upload(c *gin.Context) {
 		common.Echo(c, common.G_ParamErr, "上传失败")
 		return
 	}
+
 	defer out.Close()
 	_, err = io.Copy(out, file)
 	if err != nil {

@@ -152,3 +152,33 @@ func UpdateArticleIstop(id int, isTop bool) error {
 	defer stmtUpdate.Close()
 	return nil
 }
+
+/**
+获取文章详情
+SELECT first_name, COALESCE(age, 0) FROM person;
+使用IFNULL或者COALESCE
+*/
+func GetArticleInfo(id int) (*model.PostInfo, error) {
+	stmtOut, err := dbops.DbConn.Prepare(`
+		SELECT 
+		id, user_id, title, url, content, tags, views, status, is_top, created, updated, category_id,
+		COALESCE(types, -1), COALESCE(info, ''), COALESCE(image, '') 
+		FROM tb_post WHERE id = ?
+	`)
+
+	if err != nil {
+		logs.Warning("sql", err.Error())
+		return nil, err
+	}
+
+	post := new(model.PostInfo)
+	err = stmtOut.QueryRow(id).Scan(&post.Id, &post.UserId, &post.Title, &post.Url, &post.Content, &post.Tags, &post.Views, &post.Status, &post.IsTop, &post.Created, &post.Updated, &post.CategoryId, &post.Types, &post.Info, &post.Image)
+
+	if err != nil {
+		logs.Error("查询文章sql", err.Error())
+		return nil, err
+	}
+
+	defer stmtOut.Close()
+	return post, err
+}

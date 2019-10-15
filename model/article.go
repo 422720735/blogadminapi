@@ -30,3 +30,21 @@ type PostListRes struct {
 	Views      int    `json:"views"`
 	CategoryId int    `json:"categoryId"`
 }
+
+type PostInfo struct {
+	Id         int       `json:"id"`
+	UserId     int       `json:"userId"`
+	Title      string    `json:"title"`
+	Url        string    `json:"url"`
+	Content    string    `json:"content"`
+	Tags       string    `json:"tags"`
+	Views      int       `json:"views`
+	IsTop      int8      `json:"isTop"`
+	Created    time.Time `json:"created"`
+	Updated    time.Time `json:"updated"`
+	CategoryId int       `json:"categoryId"`
+	Status     int8      `json:"status"`
+	Types      int8      `json:"types"`
+	Info       string    `json:"info"`
+	Image      string    `json:"image"`
+}

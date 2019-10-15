@@ -29,7 +29,7 @@ func InitRouter() *gin.Engine {
 		v2.GET("/tag/del", cv1.DelTag)
 		v2.POST("/tag/post", cv1.SetTag)
 		v2.GET("/articleList/get", cv1.GetArticleList)
-		v2.POST("/article/info", cv1.Upload)
+		v2.POST("/article/upload/img", cv1.Upload)
 		v2.POST("/article/info/add", cv1.AddArticleInfo)
 		v2.POST("/article/isTop/update", cv1.UpdateArticleIstop)
 		v2.GET("/article/info/get", cv1.GetArticleInfo)
