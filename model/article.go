@@ -32,19 +32,19 @@ type PostListRes struct {
 }
 
 type PostInfo struct {
-	Id         int       `json:"id"`
-	UserId     int       `json:"userId"`
-	Title      string    `json:"title"`
-	Url        string    `json:"url"`
-	Content    string    `json:"content"`
-	Tags       string    `json:"tags"`
-	Views      int       `json:"views`
-	IsTop      int8      `json:"isTop"`
-	Created    time.Time `json:"created"`
-	Updated    time.Time `json:"updated"`
-	CategoryId int       `json:"categoryId"`
-	Status     int8      `json:"status"`
-	Types      int8      `json:"types"`
-	Info       string    `json:"info"`
-	Image      string    `json:"image"`
+	Id         int    `json:"id"`
+	UserId     int    `json:"userId"`
+	Title      string `json:"title"`
+	Url        string `json:"url"`
+	Content    string `json:"content"`
+	Tags       string `json:"tags"`
+	Views      int    `json:"views`
+	IsTop      int8   `json:"isTop"`
+	Created    int64  `json:"created"`
+	Updated    int64  `json:"updated"`
+	CategoryId int    `json:"categoryId"`
+	// Status     int8   `json:"status"` 软删除
+	Types int8   `json:"types"`
+	Info  string `json:"info"`
+	Image string `json:"image"`
 }

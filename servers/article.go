@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"math"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego/logs"
 )
@@ -161,7 +162,7 @@ SELECT first_name, COALESCE(age, 0) FROM person;
 func GetArticleInfo(id int) (*model.PostInfo, error) {
 	stmtOut, err := dbops.DbConn.Prepare(`
 		SELECT 
-		id, user_id, title, url, content, tags, views, status, is_top, created, updated, category_id,
+		id, user_id, title, url, content, tags, views, is_top, created, updated, category_id,
 		COALESCE(types, -1), COALESCE(info, ''), COALESCE(image, '') 
 		FROM tb_post WHERE id = ?
 	`)
@@ -170,10 +171,13 @@ func GetArticleInfo(id int) (*model.PostInfo, error) {
 		logs.Warning("sql", err.Error())
 		return nil, err
 	}
-
+	//ar.Created.Unix(),
 	post := new(model.PostInfo)
-	err = stmtOut.QueryRow(id).Scan(&post.Id, &post.UserId, &post.Title, &post.Url, &post.Content, &post.Tags, &post.Views, &post.Status, &post.IsTop, &post.Created, &post.Updated, &post.CategoryId, &post.Types, &post.Info, &post.Image)
-
+	var c time.Time
+	var u time.Time
+	err = stmtOut.QueryRow(id).Scan(&post.Id, &post.UserId, &post.Title, &post.Url, &post.Content, &post.Tags, &post.Views, &post.IsTop, &c, &u, &post.CategoryId, &post.Types, &post.Info, &post.Image)
+	post.Created = c.Unix()
+	post.Updated = u.Unix()
 	if err != nil {
 		logs.Error("查询文章sql", err.Error())
 		return nil, err
