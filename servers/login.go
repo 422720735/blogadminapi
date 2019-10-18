@@ -28,5 +28,6 @@ func SeleltUsers(user, pwd string) (*model.User, error) {
 		logs.Error("select user err", err.Error())
 		return res, err
 	}
+	defer stmtOut.Close()
 	return res, nil
 }

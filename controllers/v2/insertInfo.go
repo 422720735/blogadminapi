@@ -16,19 +16,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AddArticleInfo(c *gin.Context) {
+func AddOfUpdateArticleInfo(c *gin.Context) {
 	msg, err := common.Unmarshal(c)
 	if err != nil {
 		common.Echo(c, common.G_ParamErr, "参数不合法")
 		return
 	}
+	id, _ := transform.InterToInt(msg["id"])
 	title, err := transform.InterToString(msg["title"])
 	if err != nil || title == "" {
 		logs.Warning("标题不正确", err.Error())
 		common.Echo(c, common.G_ParamErr, "标题不正确")
 		return
 	}
-
 	categoryId, err := transform.InterToInt(msg["categoryId"])
 	if err != nil {
 		logs.Warning("获取categoryId失败", err.Error())
@@ -71,12 +71,22 @@ func AddArticleInfo(c *gin.Context) {
 		return
 	}
 
-	err = servers.InsertAritcle(title, tags, url, image, content, categoryId, isTop)
-	if err != nil {
-		logs.Error("add article err", err.Error())
-		common.Echo(c, common.G_ParamErr, "新增数据失败")
-		return
+	if id > 0 {
+		err := servers.UpdateArticle(id, title, tags, url, image, content, categoryId, isTop)
+		if err != nil {
+			logs.Error("update article err", err.Error())
+			common.Echo(c, common.G_ParamErr, "修改数据失败")
+			return
+		}
+		common.Echo(c, common.G_Success, "修改数据成功")
+	} else {
+		err = servers.InsertArticle(title, tags, url, image, content, categoryId, isTop)
+		if err != nil {
+			logs.Error("add article err", err.Error())
+			common.Echo(c, common.G_ParamErr, "新增数据失败")
+			return
+		}
+		common.Echo(c, common.G_Success, "新增数据成功")
 	}
-	
-	common.Echo(c, common.G_Success, "新增数据成功")
+
 }
