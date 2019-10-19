@@ -1,10 +1,3 @@
-/*
- * @Description: In User Settings Edit
- * @Author: your name
- * @Date: 2019-10-11 14:14:04
- * @LastEditTime: 2019-10-12 10:31:35
- * @LastEditors: Please set LastEditors
- */
 package v2
 
 import (
@@ -29,7 +22,6 @@ func Upload(c *gin.Context) {
 	ext := path.Ext(header.Filename)
 	name := strconv.FormatInt(time.Now().Unix(), 10)
 	// filename := "./assets/" + name + ext
-
 	path, err := qny.LoadQiNiu(c, name+ext, file, header.Size)
 	if err != err {
 		common.Echo(c, common.G_ParamErr, "上传失败")

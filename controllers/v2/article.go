@@ -94,3 +94,24 @@ func GetArticleInfo(c *gin.Context) {
 	}
 	common.Echo(c, common.G_Success, res)
 }
+
+// 软删除文章
+func DelArticleInfo(c *gin.Context) {
+	msg, err := common.Unmarshal(c)
+	if err != nil {
+		common.Echo(c, common.G_ParamErr, "参数不正确")
+		return
+	}
+	id, err := transform.InterToInt(msg["id"])
+	if err != nil || id < 1 {
+		logs.Warning("删除文章id不正确")
+		common.Echo(c, common.G_ParamErr, "id不合法")
+		return
+	}
+	err = servers.DelArticleInfo(id)
+	if err != nil {
+		common.Echo(c, common.G_ParamErr, "删除失败")
+		return
+	}
+	common.Echo(c, common.G_Success, "删除成功")
+}

@@ -11,35 +11,25 @@ import (
 	"blogadminapi/dbops"
 	"blogadminapi/model"
 	"database/sql"
-	"fmt"
 	"math"
-	"strings"
 	"time"
 
 	"github.com/astaxie/beego/logs"
 )
 
-// import "blogadminapi/dbops"
-
 /** 查询分页数据*/
 func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, []*model.PostListRes, error) {
 	var sq, idSql1, keySql string
-	sq = "select count(`id`) from tb_post where"
+	sq = "select count(`id`) from tb_post where status = 0"
 	if id > 0 {
-		idSql1 = " category_id = ?"
+		idSql1 = " and category_id = ?"
 	}
 	if keyword != "" && id > 0 {
 		keySql = " and title LIKE ? "
 	} else if keyword != "" && id <= 0 {
-		keySql = " title LIKE ?"
+		keySql = " and title LIKE ?"
 	}
 	sq = sq + idSql1 + keySql
-	if id <= 0 && keyword == "" {
-		// 替换where
-		sq = strings.Replace(sq, "where", "", -1)
-		// 去除收尾空格
-		sq = strings.TrimSpace(sq)
-	}
 	stmtOutCount, err := dbops.DbConn.Prepare(sq)
 	var res []*model.PostListRes
 	var total int
@@ -62,7 +52,7 @@ func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, [
 	// stmtLimt, err := dbops.DbConn.Query("select id, title, tags, is_top, created, updated from tb_post order by id desc limit ?, ?", (current-1)*pageSize, pageSize)
 
 	var baseSql, limitSql, idSql, likeSql string
-	baseSql = "SELECT id, title, tags, is_top, created, updated, views, category_id from tb_post where is_top = 1 UNION all SELECT id, title, tags, is_top, created, updated, views, category_id from tb_post where is_top = 0"
+	baseSql = "SELECT id, title, tags, is_top, created, updated, views, category_id from tb_post where is_top = 1 and status = 0 UNION all SELECT id, title, tags, is_top, created, updated, views, category_id from tb_post where is_top = 0 and status = 0"
 	limitSql = " order by id desc limit ?, ?"
 	if id > 0 {
 		idSql = " and category_id = ?"
@@ -74,12 +64,7 @@ func GetArticleLimitList(id, pageSize, current int, keyword string) (int, int, [
 	}
 
 	sq = baseSql + idSql + likeSql + limitSql
-	// if id <= 0 && keyword == "" {
-	// 	sq = strings.Replace(sq, "where", "", -1)
-	// 	sq = strings.TrimSpace(sq)
-	// }
 
-	fmt.Printf(sq)
 	stmtLimt, err := dbops.DbConn.Prepare(sq)
 	var row *sql.Rows
 	var e error
@@ -185,4 +170,19 @@ func GetArticleInfo(id int) (*model.PostInfo, error) {
 
 	defer stmtOut.Close()
 	return post, err
+}
+
+func DelArticleInfo(id int) error {
+	stmtDel, err := dbops.DbConn.Prepare("update tb_post set `status` = 1 where id = ?")
+	if err != nil {
+		logs.Critical("删除文章sql", err.Error())
+		return err
+	}
+	_, err = stmtDel.Exec(&id)
+	if err != nil {
+		logs.Critical("删除文章sql传递的id不正确", err.Error())
+		return err
+	}
+	defer stmtDel.Close()
+	return nil
 }
