@@ -1,6 +1,0 @@
-2019/10/19 22:12:28.140 [C] [article.go:191]  删除文章sql Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '= 1 where id = ?' at line 1
-2019/10/19 22:43:34.262 [I] [log.go:109]  select count(`id`) from tb_post where status = 0 2222 
-2019/10/19 22:43:38.822 [I] [log.go:109]  select count(`id`) from tb_post where status = 0 and category_id = ? 2222 
-2019/10/19 22:43:40.173 [I] [log.go:109]  select count(`id`) from tb_post where status = 0 and category_id = ? 2222 
-2019/10/19 22:43:42.966 [I] [log.go:109]  select count(`id`) from tb_post where status = 0 and category_id = ? and title LIKE ?  2222 
-2019/10/19 22:43:55.900 [I] [log.go:109]  select count(`id`) from tb_post where status = 0 and category_id = ? and title LIKE ?  2222 

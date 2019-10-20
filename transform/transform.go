@@ -1,10 +1,3 @@
-/*
- * @Description: In User Settings Edit
- * @Author: your name
- * @Date: 2019-09-16 10:50:30
- * @LastEditTime: 2019-10-12 17:58:35
- * @LastEditors: Please set LastEditors
- */
 package transform
 
 //所有和转换相关的函数

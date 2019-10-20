@@ -1,10 +1,3 @@
-/*
- * @Description: In User Settings Edit
- * @Author: your name
- * @Date: 2019-09-23 11:20:52
- * @LastEditTime: 2019-09-24 09:56:25
- * @LastEditors: Please set LastEditors
- */
 package model
 
 import "time"
