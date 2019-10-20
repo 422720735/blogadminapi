@@ -9,7 +9,7 @@ import (
 	"io"
 )
 
-func LoadQiNiu(c *gin.Context, key string, data io.Reader, size int64) (string, error) {
+func UpLoadQiNiu(c *gin.Context, key string, data io.Reader, size int64) (string, error) {
 	AccessKey := lib.Conf.Read("qiniu", "AccessKey")
 	SecretKey := lib.Conf.Read("qiniu", "SecretKey")
 	bucket := lib.Conf.Read("qiniu", "Scope")

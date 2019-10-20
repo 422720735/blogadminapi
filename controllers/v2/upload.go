@@ -15,14 +15,14 @@ import (
 func Upload(c *gin.Context) {
 	file, header, err := c.Request.FormFile("file")
 	if err != nil {
-		logs.Error("formdata", err.Error())
+		logs.Error("formData Upload err", err.Error())
 		common.Echo(c, common.G_ParamErr, err.Error())
 		return
 	}
 	ext := path.Ext(header.Filename)
 	name := strconv.FormatInt(time.Now().Unix(), 10)
 	// filename := "./assets/" + name + ext
-	path, err := qny.LoadQiNiu(c, name+ext, file, header.Size)
+	path, err := qny.UpLoadQiNiu(c, name+ext, file, header.Size)
 	if err != err {
 		common.Echo(c, common.G_ParamErr, "上传失败")
 		return
