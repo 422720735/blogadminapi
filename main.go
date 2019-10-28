@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	gin.SetMode(gin.DebugMode)
+	gin.SetMode(gin.ReleaseMode)
 	logger.Init()
 }
 
